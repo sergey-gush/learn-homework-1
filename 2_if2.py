@@ -15,7 +15,7 @@
 
 """
 def strings(str1, str2):
-    if type(str1) is not str or type(str2) is not str:
+    if not isinstance(str1, str) or not isinstance(str2, str):
         return 0
     elif str1 == str2:
         return 1
@@ -38,7 +38,7 @@ def main():
     second_is_learn = strings('python', 'learn')
     print(f'Вторая строка "learn": {second_is_learn}')
     second_longer = strings('краткость', 'сестра таланта')
-    print(f'Вторая строка длиннее: {second_longer}') 
+    print(f'Вторая строка длиннее: {second_longer}')
 
     
 if __name__ == "__main__":

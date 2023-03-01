@@ -35,48 +35,12 @@ async def planets(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     text = update.message.text.split()
     planet_name = text[1]
     today = date.today()
+    planet = getattr(ephem, planet_name)
+    planet_today = planet(today)
+    print(planet_today)
+    planet_const = ephem.constellation(planet_today)
+    await update.message.reply_text(f'The {planet_name} is in the constellation {planet_const[1]}')
     
-    if planet_name == 'Марс':
-        planet = ephem.Mars(today)
-        planet_const = ephem.constellation(planet)
-        await update.message.reply_text(f'{planet_name} в созвездии {consts[planet_const[1]]}')
-    elif planet_name == 'Венера':
-        planet = ephem.Venus(today)
-        planet_const = ephem.constellation(planet)
-        await update.message.reply_text(f'{planet_name} в созвездии {consts[planet_const[1]]}')
-    elif planet_name == 'Меркурий':
-        planet = ephem.Mercury(today)
-        planet_const = ephem.constellation(planet)
-        await update.message.reply_text(f'{planet_name} в созвездии {consts[planet_const[1]]}')
-    elif planet_name == 'Луна':
-        planet = ephem.Moon(today)
-        planet_const = ephem.constellation(planet)
-        await update.message.reply_text(f'{planet_name} в созвездии {consts[planet_const[1]]}')
-    elif planet_name == 'Солнце':
-        planet = ephem.Sun(today)
-        planet_const = ephem.constellation(planet)
-        await update.message.reply_text(f'{planet_name} в созвездии {consts[planet_const[1]]}')
-    elif planet_name == 'Плутон':
-        planet = ephem.Pluto(today)
-        planet_const = ephem.constellation(planet)
-        await update.message.reply_text(f'{planet_name} в созвездии {consts[planet_const[1]]}')
-    elif planet_name == 'Юпитер':
-        planet = ephem.Jupiter(today)
-        planet_const = ephem.constellation(planet)
-        await update.message.reply_text(f'{planet_name} в созвездии {consts[planet_const[1]]}')
-    elif planet_name == 'Сатурн':
-        planet = ephem.Saturn(today)
-        planet_const = ephem.constellation(planet)
-        await update.message.reply_text(f'{planet_name} в созвездии {consts[planet_const[1]]}')
-    elif planet_name == 'Уран':
-        planet = ephem.Uranus(today)
-        planet_const = ephem.constellation(planet)
-        await update.message.reply_text(f'{planet_name} в созвездии {consts[planet_const[1]]}')
-    elif planet_name == 'Нептун':
-        planet = ephem.Neptune(today)
-        planet_const = ephem.constellation(planet)
-        await update.message.reply_text(f'{planet_name} в созвездии {consts[planet_const[1]]}')
-
 
 async def talk_to_me(update: Update, context: CallbackContext):
     text = update.message.text

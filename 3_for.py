@@ -22,18 +22,13 @@ phones =  [
 """
 def phones_sold(sales):
     sum = 0
-    for num in range(len(sales)):
-        sum += sales[num]
+    for number in sales:
+        sum += number
     return sum
 
-def avg_sold(sales):
-    sum = phones_sold(sales)
+def avg_sold(sales, sum):
     avg = round(sum / len(sales))
     return avg
-
-def total_sales(sales):
-    total = len(sales)
-    return total        
 
 def main():
     """
@@ -43,24 +38,15 @@ def main():
     total_sum = 0
     total_avg = 0
     total_amount = 0
-    print('Всего продано:\n')
-
-    for item in range(len(phones)):
-        sum = phones_sold(phones[item]['items_sold'])
+    
+    for product in phones:
+        sum = phones_sold(product['items_sold'])
         total_sum += sum
-        print(f"{phones[item]['product']}: {sum}")
-
-    print('\nСреднее количество продаж:\n')
-
-    for item in range(len(phones)):
-        avg = avg_sold(phones[item]['items_sold'])
-        print(f"{phones[item]['product']}: {avg}")
+        avg = avg_sold(product['items_sold'], sum)
+        total_amount += len(product['items_sold'])
+        print(f"{product['product']} продано всего: {sum}, в срелнем: {avg}")
 
     print(f'\nВсего товаров продано: {total_sum}')
-
-    for item in range(len(phones)):
-        total = total_sales(phones[item]['items_sold'])
-        total_amount += total
 
     avg_total_sales = round(total_sum / total_amount)
 
