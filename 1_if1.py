@@ -15,12 +15,17 @@
 """
 def occupation(person_age):
     
-    kindergarten = range(7)
-    school = range(7, 18)
-    university = range(18, 24)
-    work = range(24, 66)
-    retiree = range(66, 123)
+    prenatal = -1
+    home = 0
+    kindergarten = 4
+    school = 7
+    university = 17
+    work = 22
+    retiree = 65
+    near_death = 124
     person_occupation = {
+        prenatal: 'пренатальное развитие',
+        home: 'домашнее воспитание', 
         kindergarten: 'детский сад',
         school: 'школа',
         university: 'вуз',
@@ -28,18 +33,24 @@ def occupation(person_age):
         retiree: 'пенсия'
     }
     
-    person_age = abs(person_age)
-
-    if person_age in kindergarten:
+    person_age = int(person_age)
+    
+    if person_age < prenatal:
+        return 'В это время вы ещё на были зачаты'
+    elif person_age < home:
+        return person_occupation[prenatal]
+    elif person_age < kindergarten:
+        return person_occupation[home]
+    elif person_age < school:
         return person_occupation[kindergarten]
-    elif person_age in school:
+    elif person_age < university:
         return person_occupation[school]
-    elif person_age in university:
+    elif person_age < work:
         return person_occupation[university]
-    elif person_age in work:
+    elif person_age < retiree:
         return person_occupation[work]
-    elif person_age in retiree:
-        return person_occupation[retiree]
+    elif person_age < near_death:
+        return person_occupation[retiree] 
     else:
         return 'Ваш возраст превышает рекорд долгожительства!' 
   
