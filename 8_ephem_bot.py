@@ -1,57 +1,65 @@
-"""
-Домашнее задание №1
-
-Использование библиотек: ephem
-
-* Установите модуль ephem
-* Добавьте в бота команду /planet, которая будет принимать на вход
-  название планеты на английском, например /planet Mars
-* В функции-обработчике команды из update.message.text получите
-  название планеты (подсказка: используйте .split())
-* При помощи условного оператора if и ephem.constellation научите
-  бота отвечать, в каком созвездии сегодня находится планета.
-
-"""
 import logging
+import settings
+from datetime import date
+import ephem
+from telegram import Update
+from telegram.ext import ApplicationBuilder, CommandHandler, ContextTypes, MessageHandler, filters, CallbackContext
 
-from telegram.ext import Updater, CommandHandler, MessageHandler, Filters
+logging.basicConfig(
+    filename='bot.log',
+    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
+    level=logging.INFO
+)
 
-logging.basicConfig(format='%(name)s - %(levelname)s - %(message)s',
-                    level=logging.INFO,
-                    filename='bot.log')
-
-
-PROXY = {
-    'proxy_url': 'socks5://t1.learn.python.ru:1080',
-    'urllib3_proxy_kwargs': {
-        'username': 'learn',
-        'password': 'python'
-    }
+consts = {
+    'Aries': 'Овен', 
+    'Taurus': 'Телец',
+    'Gemini': 'Близнецы',
+    'Cancer': 'Рак',
+    'Leo': 'Лев',
+    'Virgo': 'Дева',
+    'Libra': 'Весы',
+    'Scorpius': 'Скорпион',
+    'Sagittarius': 'Стрелец',
+    'Capricornus': 'Козерог',
+    'Aquarius': 'Водолей',
+    'Pisces': 'Рыбы'
 }
 
+async def hello(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+    print('/start')
+    await update.message.reply_text(f'Hello {update.effective_user.first_name}')
 
-def greet_user(update, context):
-    text = 'Вызван /start'
+async def planets(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+    
+    text = update.message.text.split()
+    planet_name = text[1]
+    today = date.today()
+    planet = getattr(ephem, planet_name)
+    planet_today = planet(today)
+    print(planet_today)
+    planet_const = ephem.constellation(planet_today)
+    await update.message.reply_text(f'The {planet_name} is in the constellation {planet_const[1]}')
+    
+
+async def talk_to_me(update: Update, context: CallbackContext):
+    text = update.message.text
     print(text)
-    update.message.reply_text(text)
-
-
-def talk_to_me(update, context):
-    user_text = update.message.text
-    print(user_text)
-    update.message.reply_text(text)
-
+    await update.message.reply_text(text)
 
 def main():
-    mybot = Updater("КЛЮЧ, КОТОРЫЙ НАМ ВЫДАЛ BotFather", request_kwargs=PROXY, use_context=True)
+    mybot = ApplicationBuilder().token(settings.API_KEY).build()
 
-    dp = mybot.dispatcher
-    dp.add_handler(CommandHandler("start", greet_user))
-    dp.add_handler(MessageHandler(Filters.text, talk_to_me))
+    start_handler = CommandHandler('start', hello)
+    planet_handler = CommandHandler('planet', planets)
+    msg_handler = MessageHandler(filters.TEXT, talk_to_me)
+    mybot.add_handler(start_handler)
+    mybot.add_handler(planet_handler)
+    mybot.add_handler(msg_handler)
 
-    mybot.start_polling()
-    mybot.idle()
+    logging.info('Started')
+    mybot.run_polling()
 
-
-if __name__ == "__main__":
+if __name__ == '__main__':
     main()
+
